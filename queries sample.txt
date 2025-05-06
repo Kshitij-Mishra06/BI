@@ -1,0 +1,50 @@
+left join 
+
+Emp_Sales_left_Joined =
+ADDCOLUMNS(
+    'Sheet1 (3)',
+    "Sales", LOOKUPVALUE('Sheet1 (2)'[Sales], 'Sheet1 (2)'[EmpID_Sheet2], 'Sheet1 (3)'[EmpID]),
+    "Address_Sheet2", LOOKUPVALUE('Sheet1 (2)'[Address], 'Sheet1 (2)'[EmpID_Sheet2], 'Sheet1 (3)'[EmpID])
+)
+
+
+right join 
+
+Emp_Sales_RightJoin =
+ADDCOLUMNS(
+    'Sheet1 (2)',
+    "AvgSalary", LOOKUPVALUE('Sheet1 (3)'[AvgSalary], 'Sheet1 (3)'[EmpID], 'Sheet1 (2)'[EmpID_Sheet2]),
+    "Address_Sheet3", LOOKUPVALUE('Sheet1 (3)'[Address], 'Sheet1 (3)'[EmpID], 'Sheet1 (2)'[EmpID_Sheet2])
+)
+
+
+Inner join 
+
+Emp_Sales_InnerJoin =
+FILTER(
+    ADDCOLUMNS(
+        'Sheet1 (3)',
+        "Sales", LOOKUPVALUE('Sheet1 (2)'[Sales], 'Sheet1 (2)'[EmpID_Sheet2], 'Sheet1 (3)'[EmpID]),
+        "Address_Sheet2", LOOKUPVALUE('Sheet1 (2)'[Address], 'Sheet1 (2)'[EmpID_Sheet2], 'Sheet1 (3)'[EmpID])
+    ),
+    NOT(ISBLANK([Sales]))  -- Only keep rows with matching Sales (i.e., where match exists)
+)
+
+
+ALL
+
+TotalSalesAll = 
+CALCULATE(
+    SUM(Sample_Sales_Data[Total Sales]), 
+    ALL(Sample_Sales_Data)
+)
+
+
+ALLEXCEPT
+
+TotalSalesAllExcept = 
+CALCULATE(
+    SUM(Sample_Sales_Data[Total Sales]), 
+    ALLEXCEPT(Sample_Sales_Data, Sample_Sales_Data[Region])
+)
+
